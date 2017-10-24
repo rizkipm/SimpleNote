@@ -38,6 +38,8 @@ class NoteTableViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of rows
         return tasks.count
     }
+    
+    
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -54,6 +56,46 @@ class NoteTableViewController: UITableViewController {
         }
 
         return cell
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        //memanggil method getData()
+        getData()
+        //memanggil reloadData
+        tableView.reloadData()
+    }
+    
+    //method getData
+    func getData() {
+        do {
+            tasks = try context.fetch(Task.fetchRequest())
+        }
+        catch {
+            print("Fetching Failed")
+        }
+    }
+    //menambahkan data untuk delete data
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        //mengecek menu swipe bila edir data
+        if editingStyle == .delete {
+            let task = tasks[indexPath.row]
+            context.delete(task)
+            //detele data
+            (UIApplication.shared.delegate as! AppDelegate).saveContext()
+            
+            do {
+                //retrieve data
+                tasks = try context.fetch(Task.fetchRequest())
+            }
+            catch {
+                print("Fetching Failed")
+            }
+        }
+        
+        //load data lagi
+        tableView.reloadData()
     }
     
 
