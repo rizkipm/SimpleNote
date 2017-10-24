@@ -67,18 +67,21 @@ class NoteTableViewController: UITableViewController {
     
     //method getData
     func getData() {
+        //mengecek apakah ada error atau tidak
         do {
+            //kondisi kalau tidak ada error
+            //maka akan request download data
             tasks = try context.fetch(Task.fetchRequest())
         }
         catch {
+            //kondisi apabila error fetch data
             print("Fetching Failed")
         }
     }
-    //menambahkan data untuk delete data
     
+    //menambahkan data untuk delete data
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        
-        //mengecek menu swipe bila edir data
+        //mengecek menu swipe apabila editing style nya delete
         if editingStyle == .delete {
             let task = tasks[indexPath.row]
             context.delete(task)
@@ -93,7 +96,6 @@ class NoteTableViewController: UITableViewController {
                 print("Fetching Failed")
             }
         }
-        
         //load data lagi
         tableView.reloadData()
     }
